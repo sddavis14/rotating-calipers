@@ -1,25 +1,32 @@
 #!/usr/bin/env python3
 
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 from scipy.spatial import ConvexHull
 from matplotlib import pyplot
 import numpy as np
-import sys
 from minimum_area_rectangle import compute_bounding_rectangle
-import time
 import math
+import sys
 
 points = np.empty(shape=(0, 2), dtype=np.float64)
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.spines[['bottom', 'left', 'right', 'top']].set_visible(False)
-ax.set_xlim([0, 10])
+ax.set_xlim([0, 17])
 ax.set_ylim([0, 10])
 ax.set_aspect(1)
 plt.xticks([])
 plt.yticks([])
+
+
+def draw_rect(rect, color):
+    prev_lines = []
+    for i in range(0, 4):
+        line = plt.plot(rect[[i, (i + 1) % 4], 0],
+                        rect[[i, (i + 1) % 4], 1],
+                        f'{color}--')
+        prev_lines.append(line)
+    return prev_lines
 
 
 def on_click(event):
@@ -41,8 +48,16 @@ def on_press(event):
     print('Pressed', event.key)
     sys.stdout.flush()
     if event.key == 'enter':
+        if points.shape[0] < 3:
+            print('Not enough points provided')
+            return
+
         hull = ConvexHull(points)
         hull_points = points[hull.vertices, :]
+
+        if hull.vertices.shape[0] < 3:
+            print('Not enough vertices on the convex hull')
+            return
 
         for hull_idx in range(0, hull.vertices.shape[0]):
             point_idx = hull.vertices[hull_idx]
@@ -56,12 +71,7 @@ def on_press(event):
         best_area = 1.0e100
         best_rect = None
         for rect in compute_bounding_rectangle(hull_points):
-            prev_lines = []
-            for i in range(0, 4):
-                line = plt.plot(rect[[i, (i+1) % 4], 0],
-                         rect[[i, (i+1) % 4], 1],
-                         '--')
-                prev_lines.append(line)
+            prev_lines = draw_rect(rect, 'r')
 
             homo_p_1 = np.concatenate([rect[0, :], np.array([1])], 0)
             homo_p_2 = np.concatenate([rect[1, :], np.array([1])], 0)
@@ -77,7 +87,6 @@ def on_press(event):
                 best_rect = rect
 
             fig.canvas.draw()
-
             pyplot.pause(1.5)
 
             for line in prev_lines:
@@ -87,12 +96,9 @@ def on_press(event):
             fig.canvas.draw()
             pyplot.pause(0.25)
 
-        plt.title('Found the minimum area rectangle with area ' + str(best_area))
+        plt.title('Found the minimum area rectangle with area \n' + '{0:.4}'.format(best_area))
 
-        for i in range(0, 4):
-            line = plt.plot(best_rect[[i, (i + 1) % 4], 0],
-                            best_rect[[i, (i + 1) % 4], 1],
-                            '--')
+        draw_rect(best_rect, 'g')
 
         fig.canvas.draw()
         pyplot.pause(0.25)
@@ -104,3 +110,4 @@ fig.canvas.mpl_connect('key_press_event', on_press)
 plt.title('Click to create some points. Press enter to execute the algorithm.')
 
 plt.show()
+
