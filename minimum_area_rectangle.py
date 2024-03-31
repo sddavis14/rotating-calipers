@@ -3,7 +3,10 @@ import numpy as np
 
 
 def next_point_idx(idx, points):
-    return (idx - 1) % points.shape[0]
+    if idx == points.shape[0]:
+        return 0
+    else:
+        return idx - 1
 
 
 def vector_angle(v1, v2):
