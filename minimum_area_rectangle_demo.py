@@ -17,6 +17,8 @@ ax.set_ylim([0, 10])
 ax.set_aspect(1)
 plt.xticks([])
 plt.yticks([])
+text = pyplot.text(0.35, 9.25, 'Area: ')
+text.set_fontsize(12)
 
 
 def draw_rect(rect, color):
@@ -24,7 +26,7 @@ def draw_rect(rect, color):
     for i in range(0, 4):
         line = plt.plot(rect[[i, (i + 1) % 4], 0],
                         rect[[i, (i + 1) % 4], 1],
-                        f'{color}--')
+                        ':', color=f'{color}')
         prev_lines.append(line)
     return prev_lines
 
@@ -59,12 +61,7 @@ def on_press(event):
             print('Not enough vertices on the convex hull')
             return
 
-        for hull_idx in range(0, hull.vertices.shape[0]):
-            point_idx = hull.vertices[hull_idx]
-            point_idx_next = hull.vertices[(hull_idx + 1) % hull.vertices.shape[0]]
-            plt.plot(points[[point_idx, point_idx_next], 0],
-                     points[[point_idx, point_idx_next], 1],
-                     '-')
+        draw_hull(hull, points)
 
         fig.canvas.draw()
 
@@ -81,7 +78,7 @@ def on_press(event):
             area_det_1 = np.stack([homo_p_1, homo_p_2, homo_p_3])
             area_det_2 = np.stack([homo_p_2, homo_p_3, homo_p_4])
             area = 0.5 * (math.fabs(np.linalg.det(area_det_1)) + math.fabs(np.linalg.det(area_det_2)))
-            print(area)
+            text.set_text('Area: ' + '{0:.4}'.format(area))
             if area < best_area:
                 best_area = area
                 best_rect = rect
@@ -89,19 +86,29 @@ def on_press(event):
             fig.canvas.draw()
             pyplot.pause(1.5)
 
-            for line in prev_lines:
-                for line2 in line:
-                    line2.remove()
+            remove_lines(prev_lines)
 
-            fig.canvas.draw()
-            pyplot.pause(0.25)
-
-        plt.title('Found the minimum area rectangle with area \n' + '{0:.4}'.format(best_area))
+        text.set_text('Minimum Area: ' + '{0:.4}'.format(best_area))
 
         draw_rect(best_rect, 'g')
 
         fig.canvas.draw()
         pyplot.pause(0.25)
+
+
+def remove_lines(prev_lines):
+    for line in prev_lines:
+        for line2 in line:
+            line2.remove()
+
+
+def draw_hull(hull, points):
+    for hull_idx in range(0, hull.vertices.shape[0]):
+        point_idx = hull.vertices[hull_idx]
+        point_idx_next = hull.vertices[(hull_idx + 1) % hull.vertices.shape[0]]
+        plt.plot(points[[point_idx, point_idx_next], 0],
+                 points[[point_idx, point_idx_next], 1],
+                 '-', color='magenta')
 
 
 fig.canvas.mpl_connect('button_press_event', on_click)
