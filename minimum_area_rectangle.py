@@ -3,8 +3,8 @@ import numpy as np
 
 
 def next_point_idx(idx, points):
-    if idx == points.shape[0]:
-        return 0
+    if idx == 0:
+        return points.shape[0] - 1
     else:
         return idx - 1
 
