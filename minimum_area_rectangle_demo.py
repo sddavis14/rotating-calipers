@@ -3,8 +3,12 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from scipy.spatial import ConvexHull
+from matplotlib import pyplot
 import numpy as np
 import sys
+from minimum_area_rectangle import compute_bounding_rectangle
+import time
+import math
 
 points = np.empty(shape=(0, 2), dtype=np.float64)
 
@@ -13,6 +17,7 @@ ax = fig.add_subplot(111)
 ax.spines[['bottom', 'left', 'right', 'top']].set_visible(False)
 ax.set_xlim([0, 10])
 ax.set_ylim([0, 10])
+ax.set_aspect(1)
 plt.xticks([])
 plt.yticks([])
 
@@ -33,24 +38,11 @@ def on_click(event):
 
 def on_press(event):
     global points, ax
-    print('press', event.key)
+    print('Pressed', event.key)
     sys.stdout.flush()
     if event.key == 'enter':
         hull = ConvexHull(points)
         hull_points = points[hull.vertices, :]
-
-        x_min = np.min(hull_points[:, 0])
-        y_min = np.min(hull_points[:, 1])
-        x_max = np.max(hull_points[:, 0])
-        y_max = np.max(hull_points[:, 1])
-
-        rect = patches.Rectangle((x_min, y_min),
-                                 x_max - x_min,
-                                 y_max - y_min,
-                                 linewidth=1,
-                                 edgecolor='magenta',
-                                 facecolor='none')
-        ax.add_patch(rect)
 
         for hull_idx in range(0, hull.vertices.shape[0]):
             point_idx = hull.vertices[hull_idx]
@@ -61,10 +53,54 @@ def on_press(event):
 
         fig.canvas.draw()
 
+        best_area = 1.0e100
+        best_rect = None
+        for rect in compute_bounding_rectangle(hull_points):
+            prev_lines = []
+            for i in range(0, 4):
+                line = plt.plot(rect[[i, (i+1) % 4], 0],
+                         rect[[i, (i+1) % 4], 1],
+                         '--')
+                prev_lines.append(line)
+
+            homo_p_1 = np.concatenate([rect[0, :], np.array([1])], 0)
+            homo_p_2 = np.concatenate([rect[1, :], np.array([1])], 0)
+            homo_p_3 = np.concatenate([rect[2, :], np.array([1])], 0)
+            homo_p_4 = np.concatenate([rect[3, :], np.array([1])], 0)
+
+            area_det_1 = np.stack([homo_p_1, homo_p_2, homo_p_3])
+            area_det_2 = np.stack([homo_p_2, homo_p_3, homo_p_4])
+            area = 0.5 * (math.fabs(np.linalg.det(area_det_1)) + math.fabs(np.linalg.det(area_det_2)))
+            print(area)
+            if area < best_area:
+                best_area = area
+                best_rect = rect
+
+            fig.canvas.draw()
+
+            pyplot.pause(1.5)
+
+            for line in prev_lines:
+                for line2 in line:
+                    line2.remove()
+
+            fig.canvas.draw()
+            pyplot.pause(0.25)
+
+        plt.title('Found the minimum area rectangle with area ' + str(best_area))
+
+        for i in range(0, 4):
+            line = plt.plot(best_rect[[i, (i + 1) % 4], 0],
+                            best_rect[[i, (i + 1) % 4], 1],
+                            '--')
+
+        fig.canvas.draw()
+        pyplot.pause(0.25)
+
 
 fig.canvas.mpl_connect('button_press_event', on_click)
 fig.canvas.mpl_connect('key_press_event', on_press)
 
-plt.title('Draw some points')
+plt.title('Click to create some points. Press enter to execute the algorithm.')
 
 plt.show()
