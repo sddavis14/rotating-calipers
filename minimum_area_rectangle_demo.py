@@ -90,15 +90,13 @@ class RotatingCalipersDemo:
                     best_area = area
                     best_rect = rect
 
-                pyplot.pause(1.5)
+                pyplot.pause(0.5)
 
                 remove_lines(prev_lines)
 
             draw_rect(best_rect, 'g')
             self.text.set_text('Minimum Area: ' + '{0:.4}'.format(best_area))
             self.fig.canvas.draw()
-            pyplot.pause(0.25)
-
             self.running_state = 'complete'
 
     def run(self):
