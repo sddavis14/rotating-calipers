@@ -13,9 +13,10 @@ illustration of the algorithm.
     <img src="min_area_rect.png" width="300">
 </p>
 
-First, the convex hull of the point set is computed. Then two sets of "calipers" are initialized with axis-aligned 
-orientation. Next, the calipers are rotated by the smallest angle to the next convex hull edge. This process is 
-continued until the rectangles are rotated up to 90 degrees, then the minimum area rectangle is selected.
+First, the convex hull of the point set is computed. Then, two sets of "calipers" are initialized with axis-aligned 
+orientation, anchored to anti-podal points. Next, the calipers are rotated by the smallest angle to the next convex hull 
+edge. This process is continued until the rectangles are rotated up to 90 degrees, and finally the minimum area 
+rectangle is selected.
 
 
 To execute the demo, run
