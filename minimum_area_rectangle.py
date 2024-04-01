@@ -54,7 +54,7 @@ def compute_bounding_rectangle(points):
 
         result = np.stack([rec_p1, rec_p2, rec_p3, rec_p4])
 
-        yield result
+        yield result  # return all the rectangles
 
         p1_next = points[next_point_idx(p1_idx, points)]
         p2_next = points[next_point_idx(p2_idx, points)]
