@@ -30,3 +30,5 @@ displayed.
 ## Citations
 
 [1] https://web.cs.swarthmore.edu/~adanner/cs97/s08/pdf/calipers.pdf
+
+[2] https://www-cgrl.cs.mcgill.ca/~godfried/publications/maxdist2.pdf
