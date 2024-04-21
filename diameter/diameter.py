@@ -85,12 +85,12 @@ def compute_bounding_rectangle(points):
         angle_4 = vector_angle(side_vec_4, vec_4)
 
         angles = [angle_2, angle_4]
-        '''if angle_2 == angle_4:
+        if angle_2 == angle_4:
             min_angle_idx = 0
             edge_p2idx = p2_idx
             edge_p4idx = next_point_idx(p4_idx, points)
-        else:'''
-        min_angle_idx = np.argmin(angles)
+        else:
+            min_angle_idx = np.argmin(angles)
         min_angle = angles[min_angle_idx]
 
         if min_angle_idx == 0:
