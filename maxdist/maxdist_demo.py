@@ -92,10 +92,10 @@ class RotatingCalipersDemo:
     def start_compute(self, hp1, hp2):
         best_diam = -1.0e100
         best_diameter = None
-        for pts, rec1, rec2, ang in compute_bounding_rectangle(hp1, hp2):
+        for pts, rec1, rec2 in compute_bounding_rectangle(hp1, hp2):
             diam = draw_diam(pts, 'black')
-            rec1d = draw_rect1(rec1, pts[0], ang, 'black')
-            rec2d = draw_rect2(rec2, pts[1], ang, 'black')
+            rec1d = draw_rect1(rec1, pts[0], 'black')
+            rec2d = draw_rect2(rec2, pts[1], 'black')
             diam_len = compute_dist(pts)
             self.text.set_text('Pair Distance: ' + '{0:.4}'.format(diam_len))
             self.fig.canvas.draw()
@@ -159,17 +159,16 @@ def draw_hull(hull, points, cnt):
                  points[[point_idx, point_idx_next], 1],
                  '-', color=col)
 
-
-def draw_rect1(rect, x, angle, color):
+def draw_rect1(rect, x, color):
     prev_lines = []
-    p1, p2 = find_equidistant_points(rect[0], rect[1], x, angle, 3)
-    line = plt.arrow(p1[0], p1[1], (p2[0] - p1[0]), (p2[1] - p1[1]), shape='full', length_includes_head=False, head_width=0.2, head_length=0.2, color = 'black')
+    p1, p2 = find_equidistant_points(rect[0], rect[1], x, 3)
+    line = plt.arrow(p2[0], p2[1], (p1[0] - p2[0]), (p1[1] - p2[1]), shape='full', length_includes_head=False, head_width=0.2, head_length=0.2, color = 'black')
     prev_lines.append(line)
     return prev_lines
 
-def draw_rect2(rect, x, angle, color):
+def draw_rect2(rect, x, color):
     prev_lines = []
-    p1, p2 = find_equidistant_points(rect[2], rect[3], x, angle, 3)
+    p1, p2 = find_equidistant_points(rect[2], rect[3], x, 3)
     line = plt.arrow(p2[0], p2[1], (p1[0] - p2[0]), (p1[1] - p2[1]), shape='full', length_includes_head=False, head_width=0.2, head_length=0.2, color = 'black')
     prev_lines.append(line)
     return prev_lines
@@ -192,29 +191,11 @@ def draw_rect(rect, points, color):
 
     return prev_lines
 
-def find_equidistant_points(point1, point2, x, angle, desired_distance):
-    flag = 0
-    mid = ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)
-
-    if (mid[0] - x[0]) == 0:
-        #print('UNDEFINED')
-        flag = 1
-    else:
-        slope = (mid[1] - x[1]) / (mid[0] - x[0])
-
-    if not flag:
-        dx = math.sqrt(desired_distance**2 / (1 + slope**2))
-        dy = slope * dx
-
-        new_point1 = np.array([mid[0] + dx, mid[1] + dy])
-        new_point2 = np.array([mid[0] - dx, mid[1] - dy])
-    else:
-
-        new_point1 = np.array([mid[0], mid[1] + 3])
-        new_point2 = np.array([mid[0], mid[1] - 3])
-
-    if angle >= math.pi/2 and angle <= math.pi * 1.5:
-        return new_point2, new_point1
+def find_equidistant_points(point1, point2, x, desired_distance):
+    vec = point2 - point1
+    vec = (vec / np.linalg.norm(vec)) * desired_distance
+    new_point1 = x - vec
+    new_point2 = x + vec
     return new_point1, new_point2
 
 if __name__ == '__main__':

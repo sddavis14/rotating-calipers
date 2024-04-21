@@ -76,7 +76,7 @@ def compute_bounding_rectangle(points1, points2):
         rec1 = np.stack([rec_p11, rec_p21, rec_p31, rec_p41])
         rec2 = np.stack([rec_p12, rec_p22, rec_p32, rec_p42])
 
-        yield (p21, p42), rec1, rec2, angle  # return all the rectangles
+        yield (p21, p42), rec1, rec2 # return all the rectangles
 
         p11_next = points1[next_point_idx(p1_idx1, points1)]
         p21_next = points1[next_point_idx(p2_idx1, points1)]
