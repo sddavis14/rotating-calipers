@@ -47,7 +47,7 @@ def compute_bounding_rectangle(points):
     edge_p2idx = -1
     edge_p4idx = -1
     while True:
-        if counter and (init_p4 == p4_idx) and (init_p2 == p2_idx):
+        if counter and (init_p2 == p4_idx) and (init_p4 == p2_idx):
             flag = 1
         p1 = points[p1_idx]
         p2 = points[p2_idx]
