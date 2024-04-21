@@ -47,7 +47,7 @@ To execute the demo, run
 ```
 python3 maxdist_demo.py
 ```
-Click points in the rectangular drawing window and press enter to create the first convex polygon. Repeat the process to create the second convex polygon and press enter to run the algorithm. The demo will measure and show the distance between all pairs that occur. Once the algorithm is complete, the diameter and its length are shown.
+Click points in the rectangular drawing window and press enter to create the first convex polygon. Repeat the process to create the second convex polygon and press enter to run the algorithm. The demo will measure and show the distance between all pairs that occur. Once the algorithm is complete, the maximum distance and the line connecting the pair are shown.
 
 ## Citations
 
