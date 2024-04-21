@@ -104,6 +104,11 @@ class RotatingCalipersDemo:
                     best_diam = diam_len
                     best_diameter = pts
 
+                if edgepoints:
+                    if edge_diam_len > best_diam:
+                        best_diam = edge_diam_len
+                        best_diameter = edgepoints
+
                 pyplot.pause(1.5)
 
                 remove_lines_(prev_lines)
