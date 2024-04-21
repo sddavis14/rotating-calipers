@@ -170,6 +170,16 @@ def draw_rect(rect, points, angle, color):
     prev_lines.append(line2)
     return prev_lines
 
+# def draw_rect(rect, points, angle, color):
+#     prev_lines = []
+#     for i in range(0, 4):
+#         line = plt.plot(rect[[i, (i + 1) % 4], 0],
+#                         rect[[i, (i + 1) % 4], 1],
+#                         ':', color=f'{color}')
+#         prev_lines.append(line)
+#     return prev_lines
+
+
 def draw_diam(pts, color):
     prev_lines = []
     line = plt.plot(np.array([pts[0][0], pts[1][0]]),
@@ -178,28 +188,14 @@ def draw_diam(pts, color):
     prev_lines.append(line)
     return prev_lines
 
+
 def find_equidistant_points(point1, point2, x, angle, desired_distance):
-    flag = 0
-    mid = ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)
-    
-    if (mid[0] - x[0]) == 0:
-        flag = 1
-    else:
-        slope = (mid[1] - x[1]) / (mid[0] - x[0])
-    
-    if not flag:
-        dx = math.sqrt(desired_distance**2 / (1 + slope**2))
-        dy = slope * dx
-
-        new_point1 = np.array([mid[0] + dx, mid[1] + dy])
-        new_point2 = np.array([mid[0] - dx, mid[1] - dy])
-    else:
-        new_point1 = np.array([mid[0], mid[1] + 3])
-        new_point2 = np.array([mid[0], mid[1] - 3])
-
-    if angle >= math.pi/2 and angle <= math.pi * 1.5:
-        return new_point2, new_point1
+    vec = point2 - point1
+    vec = (vec / np.linalg.norm(vec)) * desired_distance
+    new_point1 = x - vec
+    new_point2 = x + vec
     return new_point1, new_point2
+
 
 if __name__ == '__main__':
     demo = RotatingCalipersDemo()
