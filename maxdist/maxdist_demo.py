@@ -213,7 +213,7 @@ def find_equidistant_points(point1, point2, x, angle, desired_distance):
         new_point1 = np.array([mid[0], mid[1] + 3])
         new_point2 = np.array([mid[0], mid[1] - 3])
 
-    if angle > math.pi/2 and angle < math.pi * 1.5:
+    if angle >= math.pi/2 and angle <= math.pi * 1.5:
         return new_point2, new_point1
     return new_point1, new_point2
 
