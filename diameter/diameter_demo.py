@@ -65,7 +65,6 @@ class RotatingCalipersDemo:
                 print('Not enough points provided')
                 return
 
-            self.points = np.array([[5, 5], [7.5, 7.5], [10, 5], [7.5, 2.5], [6, 7], [9, 3]])
             hull = ConvexHull(self.points)
             hull_points = self.points[hull.vertices, :]
 
