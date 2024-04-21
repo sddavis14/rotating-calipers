@@ -40,7 +40,7 @@ def compute_bounding_rectangle(points):
     vec_4 = np.array([1, 0])
 
     angle = 0
-    while angle < math.pi / 2:  # Rotate up to 90 degrees
+    while angle <= math.pi / 2:  # Rotate up to 90 degrees
         p1 = points[p1_idx]
         p2 = points[p2_idx]
         p3 = points[p3_idx]
