@@ -90,7 +90,7 @@ class RotatingCalipersDemo:
                     best_area = area
                     best_rect = rect
 
-                pyplot.pause(0.5)
+                pyplot.pause(1)
 
                 remove_lines(prev_lines)
 
