@@ -170,15 +170,6 @@ def draw_rect(rect, points, color):
     prev_lines.append(line2)
     return prev_lines
 
-# def draw_rect(rect, points, angle, color):
-#     prev_lines = []
-#     for i in range(0, 4):
-#         line = plt.plot(rect[[i, (i + 1) % 4], 0],
-#                         rect[[i, (i + 1) % 4], 1],
-#                         ':', color=f'{color}')
-#         prev_lines.append(line)
-#     return prev_lines
-
 
 def draw_diam(pts, color):
     prev_lines = []
