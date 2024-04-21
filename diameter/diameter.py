@@ -63,11 +63,11 @@ def compute_bounding_rectangle(points):
         result = np.stack([rec_p1, rec_p2, rec_p3, rec_p4])
 
         if edge_p2idx != -1:
-            yield result, (p2, p4), angle, (points[edge_p2idx], points[edge_p4idx])
+            yield result, (p2, p4), (points[edge_p2idx], points[edge_p4idx])
             edge_p2idx = -1
             edge_p4idx = -1
         else:
-            yield result, (p2, p4), angle, None  # return all the rectangles
+            yield result, (p2, p4), None  # return all the rectangles
 
         p1_next = points[next_point_idx(p1_idx, points)]
         p2_next = points[next_point_idx(p2_idx, points)]

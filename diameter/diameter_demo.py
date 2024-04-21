@@ -82,8 +82,8 @@ class RotatingCalipersDemo:
             best_diameter = None
             best_area = 1.0e100
             best_rect = None
-            for rect, pts, ang, edgepoints in compute_bounding_rectangle(hull_points):
-                prev_lines = draw_rect(rect, pts, ang, 'r')
+            for rect, pts, edgepoints in compute_bounding_rectangle(hull_points):
+                prev_lines = draw_rect(rect, pts, 'r')
                 diam = draw_diam(pts, 'black')
                 area = compute_area_of_rect(rect)
                 diam_len = compute_dist(pts)
@@ -160,11 +160,11 @@ def draw_hull(hull, points):
                  points[[point_idx, point_idx_next], 1],
                  '-', color='magenta')
 
-def draw_rect(rect, points, angle, color):
+def draw_rect(rect, points, color):
     prev_lines = []
-    p1, p2 = find_equidistant_points(rect[0], rect[1], points[0], angle, 3)
-    p3, p4 = find_equidistant_points(rect[2], rect[3], points[1], angle, 3)
-    line1 = plt.arrow(p1[0], p1[1], (p2[0] - p1[0]), (p2[1] - p1[1]), shape='full', length_includes_head=False, head_width=0.2, head_length=0.2, color = 'black')
+    p1, p2 = find_equidistant_points(rect[0], rect[1], points[0], 3)
+    p3, p4 = find_equidistant_points(rect[2], rect[3], points[1], 3)
+    line1 = plt.arrow(p2[0], p2[1], (p1[0] - p2[0]), (p1[1] - p2[1]), shape='full', length_includes_head=False, head_width=0.2, head_length=0.2, color = 'black')
     prev_lines.append(line1)
     line2 = plt.arrow(p4[0], p4[1], (p3[0] - p4[0]), (p3[1] - p4[1]), shape='full', length_includes_head=False, head_width=0.2, head_length=0.2, color = 'black')
     prev_lines.append(line2)
@@ -189,7 +189,7 @@ def draw_diam(pts, color):
     return prev_lines
 
 
-def find_equidistant_points(point1, point2, x, angle, desired_distance):
+def find_equidistant_points(point1, point2, x, desired_distance):
     vec = point2 - point1
     vec = (vec / np.linalg.norm(vec)) * desired_distance
     new_point1 = x - vec
