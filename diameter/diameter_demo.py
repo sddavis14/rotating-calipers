@@ -65,6 +65,7 @@ class RotatingCalipersDemo:
                 print('Not enough points provided')
                 return
 
+            self.points = np.array([[5, 5], [7.5, 7.5], [10, 5], [7.5, 2.5], [6, 7], [9, 3]])
             hull = ConvexHull(self.points)
             hull_points = self.points[hull.vertices, :]
 
@@ -82,12 +83,18 @@ class RotatingCalipersDemo:
             best_diameter = None
             best_area = 1.0e100
             best_rect = None
-            for rect, pts, ang in compute_bounding_rectangle(hull_points):
+            for rect, pts, ang, edgepoints in compute_bounding_rectangle(hull_points):
                 prev_lines = draw_rect(rect, pts, ang, 'r')
                 diam = draw_diam(pts, 'black')
                 area = compute_area_of_rect(rect)
                 diam_len = compute_dist(pts)
-                self.text.set_text('Pair Distance: ' + '{0:.4}'.format(diam_len))
+                if edgepoints:
+                    edge_diam = draw_diam(edgepoints, 'black')
+                    edge_diam_len = compute_dist(edgepoints)
+                if edgepoints:
+                    self.text.set_text('Pair Distance: ' + '{0:.4}, {1:.4}'.format(diam_len, edge_diam_len))
+                else:
+                    self.text.set_text('Pair Distance: ' + '{0:.4}'.format(diam_len))
                 self.fig.canvas.draw()
 
                 if area < best_area:
@@ -98,10 +105,12 @@ class RotatingCalipersDemo:
                     best_diam = diam_len
                     best_diameter = pts
 
-                pyplot.pause(1.5)
+                pyplot.pause(5)
 
                 remove_lines_(prev_lines)
                 remove_lines(diam)
+                if edgepoints:
+                    remove_lines(edge_diam)
 
             draw_diam(best_diameter, 'g')
             self.text.set_text('Diameter Length: ' + '{0:.4}'.format(best_diam))

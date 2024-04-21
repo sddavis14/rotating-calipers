@@ -44,8 +44,10 @@ def compute_bounding_rectangle(points):
     init_p2 = p2_idx
     init_p4 = p4_idx
     flag = 0
+    edge_p2idx = -1
+    edge_p4idx = -1
     while True:
-        if counter and (init_p4 == p2_idx) and (init_p2 == p4_idx):
+        if counter and (init_p4 == p4_idx) and (init_p2 == p2_idx):
             flag = 1
         p1 = points[p1_idx]
         p2 = points[p2_idx]
@@ -60,7 +62,12 @@ def compute_bounding_rectangle(points):
 
         result = np.stack([rec_p1, rec_p2, rec_p3, rec_p4])
 
-        yield result, (p2, p4), angle  # return all the rectangles
+        if edge_p2idx != -1:
+            yield result, (p2, p4), angle, (points[edge_p2idx], points[edge_p4idx])
+            edge_p2idx = -1
+            edge_p4idx = -1
+        else:
+            yield result, (p2, p4), angle, None  # return all the rectangles
 
         p1_next = points[next_point_idx(p1_idx, points)]
         p2_next = points[next_point_idx(p2_idx, points)]
@@ -78,6 +85,11 @@ def compute_bounding_rectangle(points):
         angle_4 = vector_angle(side_vec_4, vec_4)
 
         angles = [angle_2, angle_4]
+        '''if angle_2 == angle_4:
+            min_angle_idx = 0
+            edge_p2idx = p2_idx
+            edge_p4idx = next_point_idx(p4_idx, points)
+        else:'''
         min_angle_idx = np.argmin(angles)
         min_angle = angles[min_angle_idx]
 
