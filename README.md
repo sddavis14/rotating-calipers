@@ -31,6 +31,10 @@ displayed.
 
 As before, initially the convex hull of the point set is computed. A single pair of calipers are aligned with x axis in opposite directions and anchored to anti-podal points. Again, the calipers are rotated by the smallest angle to the next convex hull edge such that at least one of the calipers reaches a new vertex, forming a new anti-podal pair. Everytime a new pair is created, the distance between the pair is stored. The calipers are rotated until they reach their initial starting point and the pair with the largest distance form the diameter of the polygon.
 
+<p align="center">
+    <img src="DIam" width="300">
+</p>
+
 To execute the demo, run
 
 ```
